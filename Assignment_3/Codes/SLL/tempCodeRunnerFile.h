@@ -1,0 +1,1 @@
+nodetype *head, *cur, *prev, *next, *target = NULL;

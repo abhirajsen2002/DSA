@@ -1,102 +1,71 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
 #include <string.h>
-#include <math.h>
 
-void Sum(int a[], int b[], int n, int m)
+int main()
 {
-    int sum[n];
-    int i = n - 1, j = m - 1, k = n - 1;
-    int c = 0, s = 0;
-    while (j >= 0)
+    char name[31];
+
+    printf("Enter name: ");
+    scanf(" %[^\n]", name);
+    char large_int[62] = "";
+
+    for (int i = 0; name[i] != '\0'; i++)
     {
-        s = a[i] + b[j] + c;
-        sum[k] = (s % 10);
-        c = s / 10;
-        k--;
-        i--;
-        j--;
+        char temp[4];
+        sprintf(temp, "%d", (int)name[i]);
+
+        strcat(large_int, temp);
     }
-    while (i >= 0)
+
+    printf("\nConverted integer = %s", large_int);
+
+    int len = strlen(large_int);
+    int left_half[31], right_half[31];
+    int p = 0, q = 0;
+    for (int i = 0; i < len; i++)
+        if (i < len / 2)
+            left_half[p++] = large_int[i] - '0';
+        else
+            right_half[q++] = large_int[i] - '0';
+
+    int sum[32], reverse_sum[32];
+    int k = 0, carry = 0;
+    while (p && q)
     {
-        s = a[i] + c;
-        sum[k] = (s % 10);
-        c = s / 10;
-        i--;
-        k--;
+        int s = left_half[--p] + right_half[--q] + carry;
+        reverse_sum[k++] = s % 10;
+        carry = s / 10;
     }
-    for (int i = 0; i <= n - 1; i++)
+
+    while (q)
     {
+        int s = right_half[--q] + carry;
+        reverse_sum[k++] = s % 10;
+        carry = s / 10;
+    }
+
+    if (carry)
+        reverse_sum[k++] = carry;
+
+    printf("\nSum of two halves = ");
+    for (int i = 0; i < k; i++)
+    {
+        sum[i] = reverse_sum[k - i - 1];
         printf("%d", sum[i]);
     }
-}
+    int P;
+    printf("\nEnter a 4-digit prime number: ");
+    scanf("%d", &P);
+    int x = 1, rem = 0;
 
-void main()
-{
-    char str[100], newstr[6], final_str[100] = "";
-    int ascval;
-    int count = 0;
-    char temp;
-    printf("Enter name : ");
-    scanf("%c", temp);
-    scanf("%100[^\n]%*c", str);
-    for (int i = 0; str[i] != '\0'; i++)
+    // Apply modular multiplication to x and modular addition to rem
+    for (int i = 0; i < k; i++)
     {
-        if (str[i] != ' ')
-        {
-            int num = (int)str[i];
-            if (num < 100)
-            {
-                count = count + 2;
-            }
-            if (num > 100)
-            {
-                count = count + 3;
-            }
-        }
+        rem += (reverse_sum[i] * x) % P;
+        rem %= P;
+        x = (x * 10) % P;
     }
-    for (int i = 0; i < strlen(str); i++)
-    {
-        if (str[i] != ' ')
-        {
-            //printf("%s\n", final_str);
-            ascval = str[i];
-            sprintf(newstr, "%d", ascval);
-            strcat(final_str, newstr);
-        }
-    }
-    int mid = ceil(count / 2.0);
-    int half_1[mid];
-    int half_2[mid];
-    int k1 = 0, k2 = 0;
-    for (int i = 0; i < count; i++)
-    {
-        if (i < mid)
-        {
-            half_1[k1] = (final_str[i] - 48);
-            k1++;
-        }
 
-        else
-        {
-            half_2[k2] = (final_str[i] - 48);
-            k2++;
-        }
-    }
-    printf("\n");
-    printf("Entire string converted to ascii : %s\n", final_str);
-    printf("First half : ");
-
-    for (int i = 0; i < mid; i++)
-    {
-        printf("%d", half_1[i]);
-    }
-    printf("\nSecond half : ");
-    for (int i = 0; i < count - mid; i++)
-    {
-        printf("%d", half_2[i]);
-    }
-    printf("\nSum of the halves : ");
-    Sum(half_1, half_2, mid, count - mid);
+    printf("Remainder when divided by %d = %d\n", P, rem);
+    return 0;
 }

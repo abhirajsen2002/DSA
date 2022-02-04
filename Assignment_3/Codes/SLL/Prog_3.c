@@ -1,3 +1,5 @@
+//Main menu function left.
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>

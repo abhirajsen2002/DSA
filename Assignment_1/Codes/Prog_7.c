@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+#define ARR_SIZE 30
+
 long random(long, long);
-int prime_check(long a) //checks if a is prime
+int prime_check(long a) // checks if a is prime
 {
     int i;
     for (i = 2; i <= a / 2; i++)
@@ -12,28 +15,37 @@ int prime_check(long a) //checks if a is prime
 }
 int main()
 {
-    srand(time(NULL));
-    long P;
-    printf("Enter PRIME number : ");
-    scanf("%ld", &P);
-    if (!prime_check(P))
+    long L[ARR_SIZE];
+    for (int i = 0; i < ARR_SIZE; i++)
     {
-        printf("Wrong input!");
+        L[i] = random(10000, 100000); // Generating a large number
     }
-    else
+    int x = 0;
+    while (x != 8)
     {
-        long L[100];
-        long R[100];
-        int i;
-        printf("Sr. no \t\t\t Li \t\t\t Ri \n");
-        for (i = 0; i < 100; i++)
-        {
-            L[i] = random(10000, 100000); //generating a large number
-            R[i] = L[i] % P;
+        printf("\n\nIteration No. : %d\n\n", (x + 1));
+        x++;
 
-            printf("%d \t\t\t %ld \t\t\t %ld \n", i + 1, L[i], R[i]);
+        srand(time(NULL));
+        long P;
+        printf("Enter PRIME number : ");
+        scanf("%ld", &P);
+        if (!prime_check(P))
+        {
+            printf("Wrong input!");
         }
-        return 0;
+        else
+        {
+            long R[ARR_SIZE];
+            int i;
+            printf("Sr. no \t\t\t Li \t\t\t Ri \n");
+            for (i = 0; i < ARR_SIZE; i++)
+            {
+                R[i] = L[i] % P;
+
+                printf("%d \t\t\t %ld \t\t\t %ld \n", i + 1, L[i], R[i]);
+            }
+        }
     }
 }
 long random(long a, long b)

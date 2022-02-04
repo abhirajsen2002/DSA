@@ -1,43 +1,100 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <string.h>
 
-int fill_array_int(int *arr, int limit)
+// Function to compare two integer values
+int myCompare_int(const void *a, const void *b)
 {
-    printf("Enter the elements of the array : \n");
-    for (int i = 0; i < limit; i++)
-    {
-        scanf("%d", &arr[i]);
-    }
+    // setting up rules for comparison
+    return *(int *)a - *(int *)b;
 }
 
-int fill_array_float(float *x, int limit)
+// Function to sort the array
+void sort_int(int *arr, int n)
 {
-    printf("Enter the elements of the array : \n");
-    for (int i = 0; i < limit; i++)
-    {
-        scanf("%f", &x[i]);
-    }
+    // calling qsort function to sort the array
+    // with the help of Comparator
+    qsort(arr, n, sizeof(int), myCompare_int);
 }
 
-int lin_search_int(int *arr, int search_term, int len)
+// Function to compare two floating-point values
+int myCompare_float(const void *a, const void *b)
 {
-    for (int i = 0; i < len; i++)
-    {
-        if (*(arr + i) == search_term)
-            return 1;
-    }
-    return 0;
+    // setting up rules for comparison
+    return *(float *)a - *(float *)b;
 }
 
-int binary_search_int(int *arr, int search_term, int len)
+// Function to sort the array
+void sort_float(float *arr, int n)
 {
+    // calling qsort function to sort the array
+    // with the help of Comparator
+    qsort(arr, n, sizeof(float), myCompare_float);
+}
+
+// Function to compare two words
+int myCompare_word(const void *a, const void *b)
+{
+    // setting up rules for comparison
+    return strcmp((char *)a, (char *)b);
+}
+
+// Function to sort the array
+void sort_word(char arr[][31], int n)
+{
+    // calling qsort function to sort the array
+    // with the help of Comparator
+    qsort(arr, n, 31 * sizeof(char), myCompare_word);
+}
+
+// Function for binary search in an array of integer values
+void binary_search_int(int *a, int n, int x)
+{
+    sort_int(a, n); // sort the array of integers
+    int left = 0, right = n;
+    while (left <= right)
+    {
+        int mid = left + (right - left) / 2;
+        if (a[mid] == x)
+        {
+            printf("Found %d by binary search.\n", a[mid]);
+            return;
+        }
+        if (a[mid] > x)
+            right = mid - 1;
+        else
+            left = mid + 1;
+    }
+    printf("Not found by binary search.\n");
+}
+
+// Function for linear search in an array of integer values
+void linear_search_int(const int *a, int n, int x)
+{
+    for (int i = 0; i < n; ++i)
+        if (a[i] == x)
+        {
+            printf("Found %d by linear search.\n", a[i]);
+            return;
+        }
+    printf("Not found by linear search.\n");
+}
+
+// Function for binary search in an array of floating-point values
+void binary_search_float(float *arr, int len, float search_term)
+{
+    sort_float(arr, len);
     int ll = 0;
     int ul = len - 1;
     while (ul >= ll)
     {
         int mid = (ll + ul) / 2;
         if (*(arr + mid) == search_term)
-            return 1;
+        {
+            printf("Found %f by binary search.\n", *(arr + mid));
+            return;
+        }
         else if (*(arr + mid) < search_term)
         {
             ll = mid + 1;
@@ -47,132 +104,109 @@ int binary_search_int(int *arr, int search_term, int len)
             ul = mid - 1;
         }
     }
-    return 0;
+
+    printf("Not Found by binary search.\n");
 }
 
-int lin_search_float(float *arr, float search_term, int len)
+// Function for linear search in an array of floating-point values
+void linear_search_float(const float *a, int n, float x)
 {
-    for (int i = 0; i < len; i++)
-    {
-        if (*(arr + i) == search_term)
-            return 1;
-    }
-    return 0;
-}
-
-int binary_search_float(float *arr, float search_term, int len)
-{
-    int ll = 0;
-    int ul = len - 1;
-    while (ul >= ll)
-    {
-        int mid = (ll + ul) / 2;
-        if (*(arr + mid) == search_term)
-            return 1;
-        else if (*(arr + mid) < search_term)
+    for (int i = 0; i < n; ++i)
+        if (a[i] == x)
         {
-            ll = mid + 1;
+            printf("Found %f by linear search.\n", a[i]);
+            return;
         }
+    printf("Not found by linear search.\n");
+}
+
+// Function for binary search in an array of words
+void binary_search_word(char a[][31], int n, char *x)
+{
+    sort_word(a, n); // sort the array of words
+    int left = 0, right = n;
+    while (left <= right)
+    {
+        int mid = left + (right - left) / 2;
+        if (strcmp(a[mid], x) == 0)
+        {
+            printf("Found %s by binary search.\n", a[mid]);
+            return;
+        }
+        if (strcmp(a[mid], x) > 0)
+            right = mid - 1;
         else
-        {
-            ul = mid - 1;
-        }
+            left = mid + 1;
     }
-    return 0;
+    printf("Not found by binary search.\n");
 }
 
+// Function for linear search in an array of words
+void linear_search_word(const char a[][31], int n, char *x)
+{
+    for (int i = 0; i < n; ++i)
+        if (strcmp(a[i], x) == 0)
+        {
+            printf("Found %s by linear search.\n", a[i]);
+            return;
+        }
+    printf("Not found by linear search.\n");
+}
+
+// Driver Code
 int main()
 {
-    printf("Press 1 liner search.\nPress 2 for binary search.\n");
-    int choice;
-    scanf("%d", &choice);
-    switch (choice)
+    int op;
+    printf("1. Integer 2. Floating point number 3. Word\nEnter choice: ");
+    scanf("%d", &op);
+    if (op == 1)
     {
-    case 1:
-        printf("Press 1 to use integer input.\nPress 2 to use float input.\n");
-        int input_choice;
-        scanf("%d", &input_choice);
-        switch (input_choice)
-        {
-        case 1:
-        {
-            printf("Enter the limit of the array : ");
-            int limit;
-            scanf("%d", &limit);
-            int *x = (int *)malloc(limit * sizeof(int));
-            fill_array_int(x, limit);
-            printf("Enter the search term : ");
-            int search_term;
-            scanf("%d", &search_term);
-            int result = lin_search_int(x, search_term, limit);
-            if (result == 1)
-                printf("\nFound!!");
-            else
-                printf("\nNot found!!");
-            break;
-        }
-        case 2:
-        {
-            printf("Enter the limit of the array : ");
-            int limit;
-            scanf("%d", &limit);
-            float *x = (float *)malloc(limit * sizeof(float));
-            fill_array_float(x, limit);
-            printf("Enter the search term : ");
-            float search_term;
-            scanf("%f", &search_term);
-            int result = lin_search_float(x, search_term, limit);
-            if (result == 1)
-                printf("\nFound!!");
-            else
-                printf("\nNot found!!");
-            break;
-        }
-        }
-        break;
-    case 2:
+        int a[100], n, x;
+        printf("Enter no of integers: ");
+        scanf("%d", &n);
+        printf("Enter integers: ");
+        // take the array as input
+        for (int i = 0; i < n; i++)
+            scanf("%d", &a[i]);
+        // take the element to be searched
+        printf("Enter the integer to be searched: ");
+        scanf("%d", &x);
+        linear_search_int(a, n, x); // call to linear search function
+        binary_search_int(a, n, x); // call to binary search search function
+    }
+    else if (op == 2)
     {
-        printf("Press 1 to use integer input.\nPress 2 to use float input.\n");
-        int input_choice;
-        scanf("%d", &input_choice);
-        switch (input_choice)
-        {
-        case 1:
-        {
-            printf("Enter the limit of the array : ");
-            int limit;
-            scanf("%d", &limit);
-            int *x = (int *)malloc(limit * sizeof(int));
-            fill_array_int(x, limit);
-            printf("Enter the search term : ");
-            int search_term;
-            scanf("%d", &search_term);
-            int result = binary_search_int(x, search_term, limit);
-            if (result == 1)
-                printf("\nFound!!");
-            else
-                printf("\nNot found!!");
-            break;
-        }
-        case 2:
-        {
-            printf("Enter the limit of the array : ");
-            int limit;
-            scanf("%d", &limit);
-            float *x = (float *)malloc(limit * sizeof(float));
-            fill_array_float(x, limit);
-            printf("Enter the search term : ");
-            float search_term;
-            scanf("%f", &search_term);
-            int result = binary_search_float(x, search_term, limit);
-            if (result == 1)
-                printf("\nFound!!");
-            else
-                printf("\nNot found!!");
-            break;
-        }
-        }
-        break;
+        float a[100], x, epsilon;
+        int n;
+        printf("Enter no of floating point numbers: ");
+        scanf("%d", &n);
+        printf("Enter floating point numbers: ");
+        // take the array as input
+        for (int i = 0; i < n; i++)
+            scanf("%f", &a[i]);
+        // take the floating-point number to be searched
+        printf("Enter the floating point number to be searched: ");
+        scanf("%f", &x);
+        linear_search_float(a, n, x); // call to linear search function
+        binary_search_float(a, n, x); // call to binary search search function
     }
+    else if (op == 3)
+    {
+        int n;
+        char a[100][31], x[31];
+        printf("Enter no of words: ");
+        scanf("%d", &n);
+        printf("Enter words: ");
+        // take the array as input
+        for (int i = 0; i < n; i++)
+            scanf("%s", a[i]);
+        // take the word to be searched
+        printf("Enter the word to be searched: ");
+        scanf("%s", x);
+        linear_search_word(a, n, x); // call to linear search function
+        binary_search_word(a, n, x); // call to binary search search function
     }
+    else
+        printf("Wrong choice.\n");
+    return 0;
 }

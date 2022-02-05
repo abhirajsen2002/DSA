@@ -7,7 +7,7 @@ void merge(int *a, int na, int *b, int nb, int *c)
 
     // add the lower elements first to c
     while (i < na && j < nb)
-        if (a[i] < b[i])
+        if (a[i] < b[j])
             c[k++] = a[i++];
         else
             c[k++] = b[j++];

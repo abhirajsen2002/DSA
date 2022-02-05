@@ -1,4 +1,5 @@
-#define MAX_LEN 100 // maximum size of a list
+#define MAX_LEN 100      // maximum size of a list
+#define SENTINEL INT_MIN // defining sentinel as the minimum value an integer type variable can hold
 
 typedef struct
 {
@@ -10,6 +11,7 @@ typedef struct
 void initListNS(ListNS *L)
 {
     L->length = 0; // setting length as 0
+    L->elements[0] = SENTINEL;
 }
 
 // function to return the number of elements in the list
@@ -89,6 +91,7 @@ void insertIthNS(ListNS *L, int i, int val)
 
             L->elements[i] = val;            // insert the value;
             L->elements[len + 1] = SENTINEL; // update end of the list
+            L->length = len + 1;
         }
         else
             printf("Out of bounds. Enter a proper index for insertion.\n");
@@ -104,6 +107,7 @@ void deleteIthNS(ListNS *L, int i)
         i--; // convert to 0-based index
         for (int j = i; j < len; j++)
             L->elements[j] = L->elements[j + 1]; // shift elements towards left by an index, starting from ith index
+        L->length = len - 1;
     }
     else
         printf("Out of bounds. Enter a proper index for deletion.\n");
